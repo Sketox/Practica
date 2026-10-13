@@ -5,6 +5,7 @@
 **Estudiante:** Santiago Esquetini
 
 📄 **Informe en PDF:** [INFORME-Seguridad-BD-Vagrant-VMware.pdf](INFORME-Seguridad-BD-Vagrant-VMware.pdf)
+✅ **Cómo verificar que funciona (paso a paso):** [VERIFICACION.md](VERIFICACION.md) · pruebas automáticas: `pruebas/verificar.ps1`
 
 Este repositorio monta en local, con **Vagrant + VMware Workstation**, la arquitectura de la guía *"Configuración de red en Azure para una aplicación y base de datos"*. En lugar de Microsoft Azure se usan tres máquinas virtuales que reproducen la VNet, sus dos subredes, el Network Security Group (NSG) de la base de datos y la conexión de la aplicación a la base de datos por IP privada.
 
@@ -71,6 +72,9 @@ seguridad-bd-vagrant/
 │   └── db.sh                   # MySQL con bind-address privado, UFW (NSG), base de datos y usuario
 ├── host/
 │   └── crear_redes_vmware.ps1  # Crea vmnet2 y vmnet3 en VMware (como Administrador)
+├── pruebas/
+│   └── verificar.ps1           # Ejecuta las 17 pruebas y muestra [OK]/[FALLO]
+├── VERIFICACION.md             # Guía para demostrar y explicar cada prueba
 └── capturas/                   # Evidencias de cada paso
 ```
 
@@ -291,6 +295,17 @@ Test-NetConnection 192.168.0.130 -Port 3306   # IP de administración de db: blo
 | Windows | db `10.0.2.10:3306` | ❌ sin ruta | Subred privada sin salida hacia fuera |
 | Windows | db `192.168.0.130:3306` | ❌ bloqueado | MySQL no escucha ahí y UFW lo deniega |
 
+Todas estas comprobaciones están automatizadas en [`pruebas/verificar.ps1`](pruebas/verificar.ps1):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File pruebas/verificar.ps1
+```
+
+![Pruebas automáticas](capturas/17_pruebas_automaticas.png)
+*Figura 17. Las 17 pruebas del laboratorio resultan correctas.*
+
+La guía [VERIFICACION.md](VERIFICACION.md) explica cómo hacer cada prueba manualmente durante la exposición.
+
 ## 6. Buenas prácticas aplicadas (punto 8 de la guía)
 
 1. **Separar aplicación y base de datos en subredes distintas:** `10.0.1.0/24` y `10.0.2.0/24`, en vmnets diferentes y comunicadas solo a través del router.
@@ -318,9 +333,8 @@ powershell -ExecutionPolicy Bypass -File host\crear_redes_vmware.ps1
 # 2. Levantar el laboratorio
 vagrant up
 
-# 3. Probar
-vagrant ssh app -c "ping -c 2 10.0.2.10"
-vagrant ssh app -c "mysql -h 10.0.2.10 -u app_user -p empresa_db"
+# 3. Probar (detalle en VERIFICACION.md)
+powershell -ExecutionPolicy Bypass -File pruebas/verificar.ps1
 
 # 4. Apagar o eliminar
 vagrant halt
