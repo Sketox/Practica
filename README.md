@@ -4,6 +4,8 @@
 **Docente:** Ing. Alex Fernando Ricaurte Segovia
 **Estudiante:** Santiago Esquetini
 
+📄 **Informe en PDF:** [INFORME-Seguridad-BD-Vagrant-VMware.pdf](INFORME-Seguridad-BD-Vagrant-VMware.pdf)
+
 Este repositorio monta en local, con **Vagrant + VMware Workstation**, la arquitectura de la guía *"Configuración de red en Azure para una aplicación y base de datos"*. En lugar de Microsoft Azure se usan tres máquinas virtuales que reproducen la VNet, sus dos subredes, el Network Security Group (NSG) de la base de datos y la conexión de la aplicación a la base de datos por IP privada.
 
 ---
@@ -28,6 +30,8 @@ Este repositorio monta en local, con **Vagrant + VMware Workstation**, la arquit
 | Conexión app → DB por IP privada | `mysql -h 10.0.2.10` desde la VM app |
 
 ## 3. Arquitectura
+
+![Arquitectura](capturas/00_arquitectura.png)
 
 ```mermaid
 flowchart LR
